@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="Play Flappy Bird Deluxe online - A polished, responsive arcade game developed through Pritam with custom skins, day/night cycles, medal rewards, and sound effects.">
+    <meta name="theme-color" content="#38bdf8">
+    <title>Flappy Bird Deluxe - Play Online</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="game-wrapper">
+    <div class="game-container" id="gameContainer">
+        <!-- Render Canvas -->
+        <canvas id="gameCanvas" width="400" height="650"></canvas>
+
+        <!-- Top HUD -->
+        <div class="game-hud" id="gameHud">
+            <div class="hud-left-controls">
+                <button class="hud-circle-btn" id="themeToggleBtn" aria-label="Toggle Sky Theme" title="Theme (Auto / Day / Sunset / Night)">
+                    <span id="themeIcon">☀️</span>
+                </button>
+            </div>
+
+            <div class="score-badge" id="hudScore">0</div>
+
+            <div class="hud-right-controls">
+                <button class="hud-circle-btn sound-toggle-btn" id="soundBtn" aria-label="Toggle Sound" title="Toggle Sound">
+                    <!-- Speaker Icon (Active) -->
+                    <svg id="soundIconOn" viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                    <!-- Speaker Icon (Muted) -->
+                    <svg id="soundIconOff" viewBox="0 0 24 24" style="display: none;">
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- 1. START SCREEN OVERLAY -->
+        <div class="screen-overlay" id="startScreen">
+            <div class="title-container">
+                <h1 class="game-title">Flappy Bird</h1>
+                <div class="title-subtitle">Deluxe Edition</div>
+            </div>
+
+            <!-- Dynamic Animated Bird Preview -->
+            <div class="bird-preview-wrap">
+                <svg class="bird-preview-svg" id="birdPreviewSvg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="50" cy="54" rx="34" ry="29" fill="rgba(0,0,0,0.14)"/>
+                    <ellipse id="svgBirdBody" cx="50" cy="50" rx="34" ry="28" fill="#FACC15" stroke="#0F172A" stroke-width="4"/>
+                    <ellipse id="svgBirdBelly" cx="44" cy="58" rx="20" ry="14" fill="#FEF08A"/>
+                    <circle cx="66" cy="40" r="10" fill="#FFFFFF" stroke="#0F172A" stroke-width="3.5"/>
+                    <circle id="svgBirdPupil" cx="68" cy="39" r="4.5" fill="#0F172A"/>
+                    <circle cx="66" cy="37" r="2" fill="#FFFFFF"/>
+                    <circle id="svgBirdBlush" cx="56" cy="52" r="5" fill="#F87171" opacity="0.6"/>
+                    <path id="svgBirdBeak" d="M72 45L88 51L72 57Z" fill="#F97316" stroke="#0F172A" stroke-width="3.5" stroke-linejoin="round"/>
+                    <path id="svgBirdWing" d="M26 48C26 48 38 42 46 48C46 56 36 64 26 58Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="3.5" stroke-linejoin="round"/>
+                    <path id="svgBirdWingIn" d="M28 50C28 50 36 45 42 50C42 55 35 60 28 56Z" fill="#FDE047"/>
+                </svg>
+            </div>
+
+            <!-- Skin Selector Pills -->
+            <div class="skin-selector-panel">
+                <div class="panel-label">Choose Bird Skin</div>
+                <div class="skin-pills" id="skinPicker">
+                    <button class="skin-btn active" data-skin="classic" title="Classic Gold">
+                        <span class="skin-dot" style="background: #facc15;"></span>
+                        <span class="skin-name">Gold</span>
+                    </button>
+                    <button class="skin-btn" data-skin="blue" title="Blue Jay">
+                        <span class="skin-dot" style="background: #38bdf8;"></span>
+                        <span class="skin-name">Blue</span>
+                    </button>
+                    <button class="skin-btn" data-skin="phoenix" title="Crimson Phoenix">
+                        <span class="skin-dot" style="background: #ef4444;"></span>
+                        <span class="skin-name">Phoenix</span>
+                    </button>
+                    <button class="skin-btn" data-skin="cyber" title="Cyber Neon">
+                        <span class="skin-dot" style="background: #8b5cf6;"></span>
+                        <span class="skin-name">Cyber</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Difficulty Segmented Tabs -->
+            <div class="difficulty-panel">
+                <div class="difficulty-tabs" id="difficultyPicker">
+                    <button class="diff-tab" data-diff="easy">Easy</button>
+                    <button class="diff-tab active" data-diff="normal">Normal</button>
+                    <button class="diff-tab" data-diff="hardcore">Hardcore</button>
+                </div>
+            </div>
+
+            <button class="btn-primary btn-pulse" id="startBtn">START GAME</button>
+
+            <div class="controls-hint">
+                <div class="hint-pill">
+                    <span class="hint-icon">🖱️</span>
+                    <span>Click, Tap or Space to Flap</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. GAME OVER SCREEN OVERLAY -->
+        <div class="screen-overlay hidden" id="gameOverScreen">
+            <div class="game-over-box">
+                <div class="game-over-title">GAME OVER</div>
+                
+                <div class="score-card">
+                    <div class="new-best-badge" id="newBestBadge">NEW BEST!</div>
+                    
+                    <div class="score-row">
+                        <span class="score-label">Score</span>
+                        <span class="score-value" id="finalScore">0</span>
+                    </div>
+
+                    <div class="score-row">
+                        <span class="score-label">Best</span>
+                        <span class="score-value best" id="bestScore">0</span>
+                    </div>
+
+                    <!-- Deluxe Medal Reward Display -->
+                    <div class="medal-reward-row">
+                        <div class="medal-label">Medal</div>
+                        <div class="medal-badge" id="medalBadge">
+                            <span class="medal-icon" id="medalIcon">🥉</span>
+                            <span class="medal-text" id="medalText">Bronze</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="encouragement-msg" id="encouragementMsg">Better Luck Next Time!</div>
+
+                <button class="btn-primary btn-restart" id="restartBtn">PLAY AGAIN</button>
+            </div>
+        </div>
+
+        <!-- Permanent Footer across all screens -->
+        <footer class="permanent-footer">
+            <div class="footer-pill">
+                This website is developed through <span class="footer-author">Pritam</span>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="audio.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
